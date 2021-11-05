@@ -61,6 +61,54 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+// for each movement create a new element
+const displayMovements = function (movements) {
+  // clear the container
+  containerMovements.innerHTML = '';
+  movements.forEach(function (mov, i) {
+    // checks if movement is positive or negative
+    const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    // create element for each movement
+    const html = `
+      <div class="movements__row">
+        <div class="movements__type movements__type--${type}">${i+1} ${type.toLocaleUpperCase()}</div>
+        <div class="movements__value">${mov}</div>
+      </div>`;
+
+    // adds element to the container
+    containerMovements.insertAdjacentHTML('afterbegin', html);
+  });
+};
+
+displayMovements(account1.movements);
+
+// function that creates username from bank account owner name
+// modified from all accounts, gets the owner name and adds username property to the account object with value
+const createUsernames = function (accs) {
+  accs.forEach(function (acc) {
+    acc.username = acc.owner
+        .toLocaleLowerCase()
+        .split(' ')
+        .map((letter) => letter[0])
+        .join('');
+  });
+  // return user.toLocaleLowerCase().split(' ').map((letter) => letter[0]).join('');
+};
+
+createUsernames(accounts);
+
+const calcDisplayBalance = function (acc) {
+  const sum = acc.movements.reduce((a, b) => a + b, 0);
+  labelBalance.innerHTML = `${sum}€`;
+  const sumIn = acc.movements.filter((mov) => mov > 0).reduce((a, b) => a + b, 0);
+  labelSumIn.innerHTML = `${sumIn}€`;
+  const sumOut = acc.movements.filter((mov) => mov < 0).reduce((a, b) => a + b, 0);
+  labelSumOut.innerHTML = `${sumOut}€`;
+}
+
+calcDisplayBalance(account1);
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -151,27 +199,78 @@ currenciesUnique.forEach(function (value, _value, map) {
 });
 */
 
-// creating new elements
+
+// map, filter and reduce
+
+// map the array an apply a function to each element
+// returns a new array containing results of the function
+
+// filter the array and apply a function to each element
+// returns a new array containing elements that pass the test
+
+// reduce the array and apply a function to each element
+// returns a single value (adding all elements together etc...)
+
+const eurToUsd = 1.1;
+
+// converts all movements to USD
+const usd = movements.map(mov => mov * eurToUsd);
+
+// console.log(movements)
+// console.log(usd);
+
+// const movementsUSD = [];
+// for (const mov of movements) {
+//   movementsUSD.push(mov * eurToUsd);
+// }
+//
+// console.log(movementsUSD);
+
+const movementsDescriptions = movements.map((mov, i) => {
+
+  const type = mov > 0 ? 'deposited' : 'withdrew';
+  return `${i+1}: You ${type} ${mov}`;
+
+  // if (mov > 0) {
+  //   return `${i+1}: You deposited ${mov}`;
+  // } else {
+  //   return `${i+1}: You withdrew ${Math.abs(mov)}`;
+  // }
+})
+// console.log(movementsDescriptions);
 
 
-// for each movement create a new element
-const displayMovements = function (movements) {
-  // clear the container
-  containerMovements.innerHTML = '';
-  movements.forEach(function (mov, i) {
-    // checks if movement is positive or negative
-    const type = mov > 0 ? 'deposit' : 'withdrawal';
+// compute usernames, with their initials
+const user = account3.owner;
+// creates username from initials
 
-    // create element for each movement
-    const html = `
-      <div class="movements__row">
-        <div class="movements__type movements__type--${type}">${i+1} ${type.toLocaleUpperCase()}</div>
-        <div class="movements__value">${mov}</div>
-      </div>`;
+// filter method
+// filters deposits that we dont see the withdraws only deposits, returns a new array
+const deposits = movements.filter(mov => mov > 0);
+// console.log(deposits);
 
-    // adds element to the container
-    containerMovements.insertAdjacentHTML('afterbegin', html);
-  });
-};
+// const depositsFor = [];
+// for (const mov of movements) {
+//   if (mov > 0) {
+//     depositsFor.push(mov);
+//   }
+// };
+// console.log(depositsFor);
 
-displayMovements(account1.movements);
+// array of all withdraws
+const withdrawals =  movements.filter((mov, i, array) => mov < 0);
+// console.log(withdrawals);
+
+
+// reduce method
+// get the array to single value
+// first is accumulator = 0 (gets increased each loop by the chosen +/-/*/), second is current value, third is index, fourth is array
+const balance = movements.reduce((acc, curr, i, arr) => acc + curr, 0);
+// console.log(balance)
+
+// Maximum value from movements
+// const max = movements.reduce((acc, curr, i, arr) => Math.max(acc, curr), 0);
+const max = movements.reduce((acc, curr) => {
+  return acc > curr ? acc : curr;
+})
+console.log(max);
