@@ -74,3 +74,81 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
+
+/*
+
+
+// arrays are objects, so they have functions
+
+let arr = ['a', 'b', 'c', 'd', 'e'];
+
+// slice
+console.log(arr.slice(2));
+console.log(arr.slice(2, -1));
+console.log(arr.slice(-2));
+
+// splice
+// changes original array
+// console.log(arr.splice(2));   // splices values, returns spliced values, deletes values from arr
+console.log(arr.splice(-1));
+console.log(arr);
+
+// reverse, it changes the original array
+const arr2 = ['j', 'i', 'h', 'g', 'f'];
+console.log(arr2.reverse());
+console.log(arr2);
+
+// concat
+// concatenate array, merge them together, dont change the original arrays
+const letters = arr.concat(arr2)
+console.log(letters);
+
+// join
+// joins them together, dont change the original arrays
+console.log(letters.join(' - '));
+
+*/
+
+
+// for each with arrays
+/*
+
+for (const [i, movement] of movements.entries()) {
+  if (movement > 0) {
+    console.log(`${i+1}: You deposited ${movement}`)
+  } else {
+    console.log(`${i+1}: You withdrew ${Math.abs(movement)}`);
+  }
+}
+
+// for each looping
+// cant break or continue out from the loop
+console.log('------- FOREACH --------')
+movements.forEach(function (mov, i, arr) {
+  if (mov > 0) {
+    console.log(`${i+1}: You deposited ${mov}`)
+  } else {
+    console.log(`${i+1}: You withdrew ${Math.abs(mov)}`);
+  }
+});
+*/
+
+/*
+
+
+// Map
+currencies.forEach(function (value, key, map) {
+  console.log(`${key}: ${value}`);
+});
+
+// Set
+const currenciesUnique = new Set(['USD', 'EUR', 'GBP', 'USD', 'EUR', 'GBP']);
+console.log(currenciesUnique);
+
+// key is the same as values
+currenciesUnique.forEach(function (value, _value, map) {
+  console.log(`${value}`);
+});
+*/
+
+// creating new elements
