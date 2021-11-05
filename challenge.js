@@ -35,10 +35,10 @@ function dogAge(dogs) {
 }
 
 const dogAges1 = dogAge(testData1);
-console.log(dogAges1);
+// console.log(dogAges1);
 
 const dogAges2 = dogAge(testData2);
-console.log(dogAges2);
+// console.log(dogAges2);
 
 //2.
 function reduceDogs(dogs) {
@@ -46,8 +46,8 @@ function reduceDogs(dogs) {
     return dogs.filter(dog =>  dog >= 18);
 }
 
-console.log(reduceDogs(dogAges1));
-console.log(reduceDogs(dogAges2));
+// console.log(reduceDogs(dogAges1));
+// console.log(reduceDogs(dogAges2));
 
 //3.
 function averageDogAge(dogs) {
@@ -55,4 +55,17 @@ function averageDogAge(dogs) {
     return dogs.reduce((acc, dog) => acc + dog, 0) / dogs.length;
 }
 
-console.log(averageDogAge([...dogAges1, ...dogAges2]));
+// console.log(averageDogAge([...dogAges1, ...dogAges2]));
+
+const allInOne = function (dogs) {
+    const humanAge = dogs.map(dog => dog <= 2 ? 2 * dog : 16 + dog * 4);
+    const adultDogs = humanAge.filter(dog => dog >= 18);
+    const averageAge = adultDogs.reduce((acc, dog, i, arr) => acc + dog / arr.length, 0);
+
+    console.log(humanAge);
+    console.log(adultDogs);
+    console.log(averageAge);
+}
+
+allInOne(testData1);
+allInOne(testData2);
