@@ -152,3 +152,26 @@ currenciesUnique.forEach(function (value, _value, map) {
 */
 
 // creating new elements
+
+
+// for each movement create a new element
+const displayMovements = function (movements) {
+  // clear the container
+  containerMovements.innerHTML = '';
+  movements.forEach(function (mov, i) {
+    // checks if movement is positive or negative
+    const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    // create element for each movement
+    const html = `
+      <div class="movements__row">
+        <div class="movements__type movements__type--${type}">${i+1} ${type.toLocaleUpperCase()}</div>
+        <div class="movements__value">${mov}</div>
+      </div>`;
+
+    // adds element to the container
+    containerMovements.insertAdjacentHTML('afterbegin', html);
+  });
+};
+
+displayMovements(account1.movements);
