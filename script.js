@@ -73,7 +73,7 @@ const displayMovements = function (movements) {
     const html = `
       <div class="movements__row">
         <div class="movements__type movements__type--${type}">${i+1} ${type.toLocaleUpperCase()}</div>
-        <div class="movements__value">${mov}</div>
+        <div class="movements__value">${mov}€</div>
       </div>`;
 
     // adds element to the container
@@ -81,7 +81,7 @@ const displayMovements = function (movements) {
   });
 };
 
-displayMovements(account1.movements);
+// displayMovements(account1.movements);
 
 // function that creates username from bank account owner name
 // modified from all accounts, gets the owner name and adds username property to the account object with value
@@ -101,13 +101,58 @@ createUsernames(accounts);
 const calcDisplayBalance = function (acc) {
   const sum = acc.movements.reduce((a, b) => a + b, 0);
   labelBalance.innerHTML = `${sum}€`;
-  const sumIn = acc.movements.filter((mov) => mov > 0).reduce((a, b) => a + b, 0);
-  labelSumIn.innerHTML = `${sumIn}€`;
-  const sumOut = acc.movements.filter((mov) => mov < 0).reduce((a, b) => a + b, 0);
-  labelSumOut.innerHTML = `${sumOut}€`;
 }
 
-calcDisplayBalance(account1);
+const calcDisplaySummary = function (acc) {
+  const sumIn = acc.movements
+      .filter((mov) => mov > 0)
+      .reduce((acc, mov) => acc + mov, 0);
+  labelSumIn.innerHTML = `${sumIn}€`;
+  const sumOut = acc.movements
+      .filter((mov) => mov < 0)
+      .reduce((acc, mov) => acc + mov, 0);
+  labelSumOut.innerHTML = `${Math.abs(sumOut)}€`;
+  const sumInterest = acc.movements
+      .filter((mov) => mov > 0)
+      .map(deposit => (deposit * acc.interestRate) / 100)
+      .filter((int, i, arr) => {
+        // console.log(arr);
+        return int >= 1;
+      })
+      .reduce((acc, int) => acc + int, 0);
+  labelSumInterest.innerHTML = `${(sumInterest)}€`;
+}
+
+// calcDisplayBalance(account1);
+// calcDisplaySummary(account1);
+
+// Event handlers
+let currentAccount;
+
+btnLogin.addEventListener('click', function(e) {
+  e.preventDefault();
+
+  currentAccount = accounts.find(acc => acc.username === inputLoginUsername.value);
+  if(currentAccount?.pin === Number(inputLoginPin.value)) {
+    // display UI and message
+    labelWelcome.innerHTML = `Welcome back, ${currentAccount.owner.split(' ')[0]}`;
+    containerApp.style.opacity = 1;
+
+    // clear input fields
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginPin.blur();
+
+    // display movements
+    displayMovements(currentAccount.movements);
+    // display balance
+    calcDisplayBalance(currentAccount);
+    // display summary
+    calcDisplaySummary(currentAccount);
+    console.log('login');
+  } else {
+
+  }
+});
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -273,4 +318,35 @@ const balance = movements.reduce((acc, curr, i, arr) => acc + curr, 0);
 const max = movements.reduce((acc, curr) => {
   return acc > curr ? acc : curr;
 })
-console.log(max);
+// console.log(max);
+
+// chaining methods, pipeline, its hard to debug
+const movUsd = movements
+    .filter(mov => mov > 0)
+    .map((mov, i, arr) => {
+      // console.log(arr);
+      return mov * eurToUsd;
+    })
+    .reduce((acc, curr) => acc + curr, 0);
+// console.log(movUsd);
+
+// find method
+// dont returns an array, returns only first value it finds
+
+// console.log(movements.find(mov => mov < 0));
+
+// console.log(accounts);
+
+// finds account with owner name 'Jessica Davis'
+const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+// console.log(account);
+
+const accountFor = function findAccount(accounts) {
+  for (const acc of accounts) {
+    if (acc.owner === 'Jessica Davis') {
+      return acc;
+    }
+  }
+}
+
+// console.log(accountFor(accounts));

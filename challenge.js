@@ -69,3 +69,11 @@ const allInOne = function (dogs) {
 
 allInOne(testData1);
 allInOne(testData2);
+
+const calcAverageHumanAge = function (dogs) {
+    const averageAge = dogs.map(dog => dog <= 2 ? 2 * dog : 16 + dog * 4).filter(dog => dog >= 18).reduce((acc, dog, i, arr) => acc + dog / arr.length, 0);
+    console.log(averageAge);
+}
+
+calcAverageHumanAge(testData1);
+calcAverageHumanAge(testData2);
