@@ -366,7 +366,7 @@ const user = account3.owner;
 
 // filter method
 // filters deposits that we dont see the withdraws only deposits, returns a new array
-const deposits = movements.filter(mov => mov > 0);
+// const deposits = movements.filter(mov => mov > 0);
 // console.log(deposits);
 
 // const depositsFor = [];
@@ -378,7 +378,7 @@ const deposits = movements.filter(mov => mov > 0);
 // console.log(depositsFor);
 
 // array of all withdraws
-const withdrawals =  movements.filter((mov, i, array) => mov < 0);
+// const withdrawals =  movements.filter((mov, i, array) => mov < 0);
 // console.log(withdrawals);
 
 
@@ -463,37 +463,96 @@ movements.sort((a, b) => b - a);
 // console.log(movements);
 
 // another way of creating and filling arrays
-console.log([1,2,3,4,5,6,7]);
+// console.log([1,2,3,4,5,6,7]);
 
 // array constructor
 const x = new Array(7);
-console.log(x);
+// console.log(x);
 
 // fills array with 1
 // x.fill(1);
 x.fill(2, 1, 5);
-console.log(x)
+// console.log(x)
 
 // fills array of length 7 with 1
 const y = Array.from({length: 7}, () => 1);
-console.log(y);
+// console.log(y);
 
 // fills array 1 - 7
 const z = Array.from({length: 7}, (_cur, i) => i + 1);
-console.log(z);
+// console.log(z);
 
 // fills array with random numbers from 0 to 100
 const v = Array.from({length: 7}, () => Math.trunc(Math.random() * 100));
-console.log(v);
+// console.log(v);
 
 labelBalance.addEventListener('click', function (e) {
   e.preventDefault();
   // creates array from text values from balance history
   const movementsUI = Array.from(document.querySelectorAll('.movements__value'),
       el => Number(el.textContent.replace('€', '')));
-  console.log(movementsUI);
+  // console.log(movementsUI);
 
   const movementsUI2 = [...document.querySelectorAll('.movements__value')];
 })
 
-// which methods to use
+// array methods practice
+// gets arrays of movements from all accounts, and then flats them into single big array, filters them to bigger then 0 and sums all together
+// 1.
+const bankDepositSum = accounts
+    .flatMap(acc => acc.movements)
+    .filter(mov => mov > 0)
+    .reduce((sum, curr) => sum + curr, 0);
+
+console.log(bankDepositSum);
+
+// 2.
+// get all transactions bigger than 1000 and get number of them
+const numDeposits1000 = accounts
+    .flatMap(acc => acc.movements)
+    .filter(mov => mov >= 1000).length;
+
+console.log(numDeposits1000);
+
+// we use count as a accumulator, each time current value is bigger than 1000 increase count +1
+const numReduced1000 = accounts.flatMap(acc => acc.movements)
+    .reduce((count, cur) => (cur >= 1000 ? ++count : count), 0);
+
+console.log(numReduced1000);
+
+// ++ increases but still returns original value
+let a = 10;
+console.log(a++);
+
+// 3.
+// create object from array with reduce
+const {deposits, withdrawals} = accounts.flatMap(acc => acc.movements).reduce((sums, cur) => {
+  cur > 0 ? sums.deposits += cur : sums.withdrawals += cur;
+  return sums;
+}, {deposits: 0, withdrawals: 0});
+
+console.log(deposits, withdrawals);
+
+const {depositsA, withdrawalsA} = accounts.flatMap(acc => acc.movements).reduce((sums, cur) => {
+  // cur > 0 ? sums.deposits += cur : sums.withdrawals += cur;
+  sums[cur > 0 ? 'depositsA' : 'withdrawalsA'] += cur;
+  return sums;
+}, {depositsA: 0, withdrawalsA: 0})
+
+console.log(depositsA, withdrawalsA);
+
+// 4. this is a nice title -> This Is a Nice Title
+const convertTitleCase = function (title) {
+  const exceptions = ['a','an','the','but','or','on','in','with'];
+  const nTitle = title
+      .toLowerCase()
+      .split(' ')
+      .map(word => exceptions.includes(word) ? word : word[0].toUpperCase() + word.slice(1)).join(' ');
+
+  return nTitle;
+}
+
+console.log(convertTitleCase('this is a nice title'));
+console.log(convertTitleCase('i i can do this all day ii, or so'));
+console.log(convertTitleCase('This is a LONG title but not too long'));
+console.log(convertTitleCase('and here is another title with an EXAMPLE'));
