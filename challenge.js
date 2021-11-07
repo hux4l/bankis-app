@@ -77,3 +77,112 @@ const calcAverageHumanAge = function (dogs) {
 
 calcAverageHumanAge(testData1);
 calcAverageHumanAge(testData2);
+
+
+// challenge x4
+
+const dogs = [
+    {
+        weight: 22,
+        curFood: 250,
+        owners: ['Alice', 'Bob']
+    },
+    {
+        weight: 8,
+        curFood: 200,
+        owners: ['Matilda']
+    },
+    {
+        weight: 13,
+        curFood: 275,
+        owners: ['Sarah', 'John']
+    },
+    {
+        weight: 32,
+        curFood: 340,
+        owners: ['Michael']
+    },
+]
+
+// 1. calculate average dog portion of food weight * 0,75 * 28
+console.log('Challenge #4\n\n\n')
+
+const calcRecFood = function (dogs) {
+    return dogs.map(dog => dog.recFood = Math.trunc(Math.pow(dog.weight, 0.75) * 28));
+}
+
+// dogs.forEach(dog => (dog.recFood = Math.trunc(dog.weight ** 0.75 * 28)));
+// console.log(dogs);
+
+// 2.   find Sarah's dog and calculate if eats good
+const findSarahDog = function (dogs) {
+
+    // find dog that belongs to sarah
+    const sDog = dogs.find(dog => dog.owners.includes('Sarah'));
+
+    // check how much eats the dog
+    const dogFood = dogF => {
+        if (dogF.curFood <= dogF.recFood * 0.9) {
+            return 'too little';
+        } else if (dogF.curFood >= dogF.recFood * 1.1) {
+            return 'too much';
+        } else {
+            return 'well';
+        }
+    }
+
+    console.log(`Sarah your dog eats ${dogFood(sDog)}`);
+}
+
+console.log(calcRecFood(dogs));
+findSarahDog(dogs);
+
+
+// 3. Array containing all owners that eats too little or too much
+const ownersEatTooMuch = [];
+const ownersEatTooLittle = [];
+
+const ownersEating = function (dogs) {
+    dogs.map(dog => {
+        if (dog.curFood <= dog.recFood * 0.9) {
+            ownersEatTooLittle.push(...dog.owners);
+        } else if (dog.curFood >= dog.recFood * 1.1) {
+            ownersEatTooMuch.push(...dog.owners);
+        }
+    });
+};
+
+//3. another way
+const dogsLittle = dogs.filter(dog => dog.curFood <= dog.recFood * 0.9 ? dog.owners : '').map(own => own.owners).flat(3);
+const dogsMuch = dogs.filter(dog => dog.curFood >= dog.recFood * 1.1).map(own => own.owners).flat(3);
+
+ownersEating(dogs);
+
+//4. string of owners dogs eating too much or little
+console.log(`${ownersEatTooMuch.join(' and ')}'s dogs eat too much!`);
+console.log(`${ownersEatTooLittle.join(' and ')}'s dogs eat too little!`);
+
+
+
+//5. if theres any dog that eats good
+const dogExactly = dogs.filter(dog => dog.curFood === dog.recFood).map(own => own.owners).flat();
+
+console.log(dogs.some(dog => dog.curFood === dog.recFood));
+
+console.log(dogsLittle);
+console.log(dogsMuch);
+console.log(dogExactly);
+
+//6.
+const dogOk = dogs.filter(dog => dog.curFood <= dog.recFood * 1.1 && dog.curFood >= dog.recFood * 0.9).map(own => own.owners).flat();
+console.log(dogOk);
+
+// 7. array of dogs eating ok
+console.log(dogs.some(dog => dog.curFood <= dog.recFood * 1.1 && dog.curFood >= dog.recFood * 0.9));
+
+const dogsOk = dogs.find(dog => dog.curFood <= dog.recFood * 1.1 && dog.curFood >= dog.recFood * 0.9);
+console.log(dogsOk);
+
+// 8. sort based on food portion
+const dogsCopy = dogs.slice().sort((a, b)  => a.recFood - b.recFood);
+console.log(dogsCopy);

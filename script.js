@@ -475,15 +475,15 @@ x.fill(2, 1, 5);
 // console.log(x)
 
 // fills array of length 7 with 1
-const y = Array.from({length: 7}, () => 1);
+// const y = Array.from({length: 7}, () => 1);
 // console.log(y);
 
 // fills array 1 - 7
-const z = Array.from({length: 7}, (_cur, i) => i + 1);
+// const z = Array.from({length: 7}, (_cur, i) => i + 1);
 // console.log(z);
 
 // fills array with random numbers from 0 to 100
-const v = Array.from({length: 7}, () => Math.trunc(Math.random() * 100));
+// const v = Array.from({length: 7}, () => Math.trunc(Math.random() * 100));
 // console.log(v);
 
 labelBalance.addEventListener('click', function (e) {
@@ -543,11 +543,14 @@ console.log(depositsA, withdrawalsA);
 
 // 4. this is a nice title -> This Is a Nice Title
 const convertTitleCase = function (title) {
+  // refactoring, small method to capitalize word
+  const capitalize = str => str[0].toUpperCase() + str.slice(1);
   const exceptions = ['a','an','the','but','or','on','in','with'];
   const nTitle = title
       .toLowerCase()
       .split(' ')
-      .map(word => exceptions.includes(word) ? word : word[0].toUpperCase() + word.slice(1)).join(' ');
+      .map(word => exceptions.includes(word) ? word : capitalize(word))
+      .join(' ');
 
   return nTitle;
 }
