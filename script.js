@@ -62,10 +62,15 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 // for each movement create a new element
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   // clear the container
   containerMovements.innerHTML = '';
-  movements.forEach(function (mov, i) {
+
+  // sorts
+  const movs = sort ? movements.slice().sort((a,b) => a - b) : movements;
+
+
+  movs.forEach(function (mov, i) {
     // checks if movement is positive or negative
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
@@ -98,9 +103,18 @@ const createUsernames = function (accs) {
 
 createUsernames(accounts);
 
+const updateUI = function (acc) {
+  // display movements
+  displayMovements(acc.movements);
+  // display balance
+  calcDisplayBalance(currentAccount);
+  // display summary
+  calcDisplaySummary(currentAccount);
+}
+
 const calcDisplayBalance = function (acc) {
-  const sum = acc.movements.reduce((a, b) => a + b, 0);
-  labelBalance.innerHTML = `${sum}€`;
+  acc.balance = acc.movements.reduce((a, b) => a + b, 0);
+  labelBalance.innerHTML = `${acc.balance}€`;
 }
 
 const calcDisplaySummary = function (acc) {
@@ -140,19 +154,80 @@ btnLogin.addEventListener('click', function(e) {
 
     // clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
+    // loses focus on PIN element
     inputLoginPin.blur();
 
-    // display movements
-    displayMovements(currentAccount.movements);
-    // display balance
-    calcDisplayBalance(currentAccount);
-    // display summary
-    calcDisplaySummary(currentAccount);
-    console.log('login');
+    updateUI(currentAccount);
   } else {
 
   }
 });
+
+btnTransfer.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      const amount = Number(inputTransferAmount.value);
+      const receiverAcc = accounts.find(acc => acc.username === inputTransferTo.value);
+
+      // checks if username exists, if
+      if (amount > 0 && currentAccount.balance >= amount && receiverAcc?.username !== currentAccount.username) {
+
+        // doing the transfer
+        currentAccount.movements.push(-amount);
+        receiverAcc.movements.push(amount);
+
+        console.log('done');
+
+        updateUI(currentAccount);
+      } else {
+        console.log('Not enough money');
+      }
+
+      inputTransferTo.value = inputTransferAmount.value = '';
+      inputTransferAmount.blur();
+    }
+)
+
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  const amount = Number(inputLoanAmount.value);
+
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    currentAccount.movements.push(amount);
+
+    updateUI(currentAccount);
+
+    inputLoanAmount.innerHTML = '';
+    inputLoanAmount.blur();
+  }
+})
+
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+  if (inputCloseUsername.value === currentAccount.username && Number(inputClosePin.value) === currentAccount.pin) {
+    const index = accounts.findIndex(acc => acc.username === currentAccount.username);
+
+    // delete account
+    accounts.splice(index, 1);
+
+    // hide UI
+    containerApp.style.opacity = 0;
+  }
+
+  inputCloseUsername.value = inputClosePin.value = '';
+  inputClosePin.blur();
+});
+
+// observe value, to sort or get back
+let sorted = false;
+
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
+})
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -350,3 +425,39 @@ const accountFor = function findAccount(accounts) {
 }
 
 // console.log(accountFor(accounts));
+
+// console.log(movements);
+// returns true if exactly given value exists
+// equality
+// console.log(movements.includes(-130));
+
+// checks id we have any positive movement in the array
+// condition
+const anyDeposits = movements.some(mov => mov > 1500);
+// console.log(anyDeposits);
+
+
+// flat, flatMap
+
+const arr = [[[1, 2],2,3], [4,5,6], 7, 8, 7, 4];
+// parameter is how deep to get to flat
+// console.log(arr.flat(2));
+
+// ascending
+// movements.sort((a, b) => {
+//   if (a > b) return 1;
+//   if (a < b) return -1;
+// });
+movements.sort((a, b) => a - b);
+
+console.log(movements);
+
+// descending
+// movements.sort((a, b) => {
+//   if (a > b) return -1;
+//   if (a < b) return 1;
+// });
+
+movements.sort((a, b) => b - a);
+
+console.log(movements);
