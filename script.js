@@ -450,7 +450,7 @@ const arr = [[[1, 2],2,3], [4,5,6], 7, 8, 7, 4];
 // });
 movements.sort((a, b) => a - b);
 
-console.log(movements);
+// console.log(movements);
 
 // descending
 // movements.sort((a, b) => {
@@ -460,4 +460,40 @@ console.log(movements);
 
 movements.sort((a, b) => b - a);
 
-console.log(movements);
+// console.log(movements);
+
+// another way of creating and filling arrays
+console.log([1,2,3,4,5,6,7]);
+
+// array constructor
+const x = new Array(7);
+console.log(x);
+
+// fills array with 1
+// x.fill(1);
+x.fill(2, 1, 5);
+console.log(x)
+
+// fills array of length 7 with 1
+const y = Array.from({length: 7}, () => 1);
+console.log(y);
+
+// fills array 1 - 7
+const z = Array.from({length: 7}, (_cur, i) => i + 1);
+console.log(z);
+
+// fills array with random numbers from 0 to 100
+const v = Array.from({length: 7}, () => Math.trunc(Math.random() * 100));
+console.log(v);
+
+labelBalance.addEventListener('click', function (e) {
+  e.preventDefault();
+  // creates array from text values from balance history
+  const movementsUI = Array.from(document.querySelectorAll('.movements__value'),
+      el => Number(el.textContent.replace('€', '')));
+  console.log(movementsUI);
+
+  const movementsUI2 = [...document.querySelectorAll('.movements__value')];
+})
+
+// which methods to use
